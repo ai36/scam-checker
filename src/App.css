@@ -1,0 +1,38 @@
+.main__box {
+  background-color: #e0e0e0;
+  padding: 40px;
+  border-radius: 20px;
+}
+
+.title {
+  text-align: center;
+}
+
+.form__box {
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: 4px;
+  padding: 40px 20px;
+
+  display: flex;
+  gap: 10px;
+
+  position: relative;
+}
+
+.form-box__input {
+  padding: 0 .5em;
+}
+
+.form-box__error {
+  border-radius: 4px;
+  padding: 0.2em 0.4em;
+  margin: 0;
+  line-height: 1.2;
+
+  position: absolute;
+  top: calc(20px - .75em);
+  left: calc(20px + 10px);
+
+  font-weight: 600;
+  color: red
+}
