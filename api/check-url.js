@@ -1,15 +1,14 @@
-// api/check-url.js
 import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const router = express.Router();
-router.use(express.json());
+const app = express();
+app.use(express.json());
 
 // Обработка POST-запроса: URL ожидается в теле запроса
-router.post("/", async (req, res) => {
+app.post("/", async (req, res) => {
   const { url } = req.body;
   if (!url) {
     return res.status(400).json({ error: "URL not provided in body" });
@@ -18,7 +17,7 @@ router.post("/", async (req, res) => {
 });
 
 // Обработка GET-запроса: URL ожидается в query-параметрах
-router.get("/", async (req, res) => {
+app.get("/", async (req, res) => {
   const { url } = req.query;
   if (!url) {
     return res.status(400).json({ error: "URL not provided in query" });
@@ -76,4 +75,7 @@ async function checkUrl(url, res) {
   }
 }
 
-export default router;
+// Экспортируем функцию-обработчик, вызывающую наше Express-приложение
+export default function handler(req, res) {
+  return app(req, res);
+}
