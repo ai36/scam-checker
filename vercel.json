@@ -4,12 +4,24 @@
       {
         "src": "api/check-url.js",
         "use": "@vercel/node"
+      },
+      {
+        "src": "package.json",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "dist"
+        }
       }
     ],
     "routes": [
       {
         "src": "/api/check-url",
-        "dest": "api/check-url.js"
+        "methods": ["GET", "POST"],
+        "dest": "/api/check-url.js"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/$1"
       }
     ]
   }
