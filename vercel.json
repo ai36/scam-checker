@@ -6,22 +6,19 @@
         "use": "@vercel/node"
       },
       {
-        "src": "package.json",
-        "use": "@vercel/static-build",
-        "config": {
-          "distDir": "dist"
-        }
+        "src": "index.html",
+        "use": "@vercel/static"
       }
     ],
     "routes": [
       {
         "src": "/api/check-url",
-        "methods": ["GET", "POST"],
-        "dest": "/api/check-url.js"
+        "dest": "api/check-url.js"
       },
       {
         "src": "/(.*)",
-        "dest": "/$1"
+        "dest": "/index.html"
       }
     ]
   }
+  
