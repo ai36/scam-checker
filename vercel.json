@@ -16,7 +16,7 @@
     "routes": [
       {
         "src": "/api/check-url",
-        "methods": ["POST"],
+        "methods": ["GET", "POST"],
         "dest": "/api/check-url"
       },
       {
@@ -25,3 +25,4 @@
       }
     ]
   }
+  

@@ -8,6 +8,13 @@ function FormUrlCheck() {
 
   const inputRef = useRef(null);
 
+  // Определяем базовый URL API в зависимости от окружения:
+  // Если локальный хост, используем локальный сервер, иначе адрес продакшена.
+  const API_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:3000/api/check-url"
+      : "https://scam-checker.vercel.app/api/check-url";
+
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -47,16 +54,23 @@ function FormUrlCheck() {
     setResult(null);
 
     try {
-      const response = await fetch(
-        "https://scam-checker.vercel.app/api/check-url",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ url: normalizedUrl }),
-        }
-      );
+      // Пытаемся отправить POST-запрос
+      let response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: normalizedUrl }),
+      });
+
+      // Если получили 404, пробуем GET-запрос
+      if (response.status === 404) {
+        console.warn("POST-запрос вернул 404, пробую GET-запрос");
+        response = await fetch(
+          `${API_URL}?url=${encodeURIComponent(normalizedUrl)}`,
+          { method: "GET" }
+        );
+      }
 
       if (!response.ok) {
         throw new Error(`Ошибка сервера: ${response.status}`);
@@ -65,7 +79,10 @@ function FormUrlCheck() {
       const resultData = await response.json();
 
       if (resultData.safe) {
-        setResult({ safe: true, message: `URL безопасен: ${normalizedUrl}` });
+        setResult({
+          safe: true,
+          message: `URL безопасен: ${normalizedUrl}`,
+        });
       } else {
         setResult({
           safe: false,
