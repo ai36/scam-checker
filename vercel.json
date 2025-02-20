@@ -1,4 +1,4 @@
-  {
+{
     "version": 2,
     "builds": [
       {
@@ -16,12 +16,12 @@
     "routes": [
       {
         "src": "/api/check-url",
-        "dest": "api/check-url.js"
+        "methods": ["GET", "POST"],
+        "dest": "/api/check-url.js"
       },
       {
         "src": "/(.*)",
-        "dest": "/index.html"
+        "dest": "/$1"
       }
     ]
   }
-  
