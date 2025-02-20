@@ -11,11 +11,11 @@ dotenv.config();
 
 const app = express();
 
-// Для ES Modules получаем __dirname:
+// Получаем __dirname для ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Разрешаем запросы с http://localhost:5173 (или используйте '*' для всех)
+// Разрешаем CORS для http://localhost:5173 (или используйте '*' для всех)
 app.use(cors({
   origin: "http://localhost:5173"
 }));
@@ -23,10 +23,10 @@ app.use(cors({
 // Подключаем JSON-парсер
 app.use(express.json());
 
-// Если у вас есть клиентская сборка, обслуживаем статические файлы из папки "build"
+// Обслуживаем статические файлы из папки build (если есть)
 app.use(express.static(path.join(__dirname, "build")));
 
-// Подключаем роутер для API по пути /api/check-url
+// Подключаем API-роутер по пути /api/check-url
 app.use("/api/check-url", checkUrlRouter);
 
 // Для всех остальных запросов отдаем index.html (для клиентской части)
