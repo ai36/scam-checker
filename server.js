@@ -23,13 +23,13 @@ app.use(cors({
 // Подключаем JSON-парсер
 app.use(express.json());
 
-// Если у вас есть клиентская сборка, обслуживаем статические файлы
+// Если у вас есть клиентская сборка, обслуживаем статические файлы из папки "build"
 app.use(express.static(path.join(__dirname, "build")));
 
-// Подключаем роутер для API
-app.use("/api", checkUrlRouter);
+// Подключаем роутер для API по пути /api/check-url
+app.use("/api/check-url", checkUrlRouter);
 
-// Для всех остальных запросов отдаем index.html (если клиентская часть)
+// Для всех остальных запросов отдаем index.html (для клиентской части)
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });

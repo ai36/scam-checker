@@ -1,33 +1,15 @@
+// api/check-url.js
 import express from "express";
-import serverless from "serverless-http";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const app = express();
-app.use(express.json());
-
-// Функция-обертка с таймаутом для fetch-запроса
-async function fetchWithTimeout(url, options, timeout = 5000) {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(new Error("Request timed out"));
-    }, timeout);
-    fetch(url, options)
-      .then((res) => {
-        clearTimeout(timer);
-        resolve(res);
-      })
-      .catch((err) => {
-        clearTimeout(timer);
-        reject(err);
-      });
-  });
-}
+const router = express.Router();
+router.use(express.json());
 
 // Обработка POST-запроса: URL ожидается в теле запроса
-app.post("/", async (req, res) => {
+router.post("/", async (req, res) => {
   const { url } = req.body;
   if (!url) {
     return res.status(400).json({ error: "URL not provided in body" });
@@ -36,7 +18,7 @@ app.post("/", async (req, res) => {
 });
 
 // Обработка GET-запроса: URL ожидается в query-параметрах
-app.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
   const { url } = req.query;
   if (!url) {
     return res.status(400).json({ error: "URL not provided in query" });
@@ -76,15 +58,11 @@ async function checkUrl(url, res) {
   console.log("Google API request body:", requestBody);
 
   try {
-    const response = await fetchWithTimeout(
-      GOOGLE_API_URL,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody),
-      },
-      5000 // таймаут 5 секунд
-    );
+    const response = await fetch(GOOGLE_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
+    });
     const data = await response.json();
     console.log("Google API response:", data);
     if (data.matches) {
@@ -94,10 +72,8 @@ async function checkUrl(url, res) {
     }
   } catch (error) {
     console.error("Error checking URL:", error);
-    return res
-      .status(500)
-      .json({ error: "Error checking URL: " + error.message });
+    return res.status(500).json({ error: "Error checking URL: " + error.message });
   }
 }
 
-export default serverless(app);
+export default router;
