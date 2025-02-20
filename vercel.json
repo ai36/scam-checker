@@ -1,28 +1,15 @@
-{
+  {
     "version": 2,
     "builds": [
       {
         "src": "api/check-url.js",
         "use": "@vercel/node"
-      },
-      {
-        "src": "package.json",
-        "use": "@vercel/static-build",
-        "config": {
-          "distDir": "dist"
-        }
       }
     ],
     "routes": [
       {
         "src": "/api/check-url",
-        "methods": ["GET", "POST"],
-        "dest": "/api/check-url"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/$1"
+        "dest": "api/check-url.js"
       }
     ]
   }
-  

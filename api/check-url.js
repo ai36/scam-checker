@@ -1,4 +1,5 @@
 import express from "express";
+import serverless from "serverless-http";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 
@@ -7,7 +8,6 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// Обработка POST-запроса: URL ожидается в теле запроса
 app.post("/", async (req, res) => {
   const { url } = req.body;
   if (!url) {
@@ -16,7 +16,6 @@ app.post("/", async (req, res) => {
   return await checkUrl(url, res);
 });
 
-// Обработка GET-запроса: URL ожидается в query-параметрах
 app.get("/", async (req, res) => {
   const { url } = req.query;
   if (!url) {
@@ -29,9 +28,7 @@ async function checkUrl(url, res) {
   const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
   if (!GOOGLE_API_KEY) {
     console.error("Google API Key is missing");
-    return res
-      .status(500)
-      .json({ error: "Internal Server Error: Missing API Key" });
+    return res.status(500).json({ error: "Internal Server Error: Missing API Key" });
   }
 
   const GOOGLE_API_URL = `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${GOOGLE_API_KEY}`;
@@ -75,4 +72,4 @@ async function checkUrl(url, res) {
   }
 }
 
-export default app;
+export default serverless(app);
